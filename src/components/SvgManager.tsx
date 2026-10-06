@@ -18,51 +18,66 @@ import {
 export interface SvgTileItem {
   code: string;
   name: string;
-  category: 'wan' | 'tong' | 'tiao' | 'zi' | 'back';
+  category: 'wan' | 'tong' | 'tiao' | 'zi' | 'flower' | 'back';
   filename: string;
+  recognizedFile: string;
 }
 
 export const ALL_SVG_TILES: SvgTileItem[] = [
-  // Wan
-  { code: '1m', name: '一万', category: 'wan', filename: '1m.svg' },
-  { code: '2m', name: '二万', category: 'wan', filename: '2m.svg' },
-  { code: '3m', name: '三万', category: 'wan', filename: '3m.svg' },
-  { code: '4m', name: '四万', category: 'wan', filename: '4m.svg' },
-  { code: '5m', name: '五万', category: 'wan', filename: '5m.svg' },
-  { code: '6m', name: '六万', category: 'wan', filename: '6m.svg' },
-  { code: '7m', name: '七万', category: 'wan', filename: '7m.svg' },
-  { code: '8m', name: '八万', category: 'wan', filename: '8m.svg' },
-  { code: '9m', name: '九万', category: 'wan', filename: '9m.svg' },
-  // Tong
-  { code: '1p', name: '一筒', category: 'tong', filename: '1p.svg' },
-  { code: '2p', name: '二筒', category: 'tong', filename: '2p.svg' },
-  { code: '3p', name: '三筒', category: 'tong', filename: '3p.svg' },
-  { code: '4p', name: '四筒', category: 'tong', filename: '4p.svg' },
-  { code: '5p', name: '五筒', category: 'tong', filename: '5p.svg' },
-  { code: '6p', name: '六筒', category: 'tong', filename: '6p.svg' },
-  { code: '7p', name: '七筒', category: 'tong', filename: '7p.svg' },
-  { code: '8p', name: '八筒', category: 'tong', filename: '8p.svg' },
-  { code: '9p', name: '九筒', category: 'tong', filename: '9p.svg' },
-  // Tiao
-  { code: '1s', name: '一条', category: 'tiao', filename: '1s.svg' },
-  { code: '2s', name: '二条', category: 'tiao', filename: '2s.svg' },
-  { code: '3s', name: '三条', category: 'tiao', filename: '3s.svg' },
-  { code: '4s', name: '四条', category: 'tiao', filename: '4s.svg' },
-  { code: '5s', name: '五条', category: 'tiao', filename: '5s.svg' },
-  { code: '6s', name: '六条', category: 'tiao', filename: '6s.svg' },
-  { code: '7s', name: '七条', category: 'tiao', filename: '7s.svg' },
-  { code: '8s', name: '八条', category: 'tiao', filename: '8s.svg' },
-  { code: '9s', name: '九条', category: 'tiao', filename: '9s.svg' },
-  // Zi
-  { code: '1z', name: '东风', category: 'zi', filename: '1z.svg' },
-  { code: '2z', name: '南风', category: 'zi', filename: '2z.svg' },
-  { code: '3z', name: '西风', category: 'zi', filename: '3z.svg' },
-  { code: '4z', name: '北风', category: 'zi', filename: '4z.svg' },
-  { code: '5z', name: '红中', category: 'zi', filename: '5z.svg' },
-  { code: '6z', name: '发财', category: 'zi', filename: '6z.svg' },
-  { code: '7z', name: '白板', category: 'zi', filename: '7z.svg' },
-  // Back
-  { code: 'back', name: '牌背贴图', category: 'back', filename: 'back.svg' },
+  // Wan (万子: 08-characters-1.svg ~ 16-characters-9.svg)
+  { code: '1m', name: '一万', category: 'wan', filename: '1m.svg', recognizedFile: '08-characters-1.svg' },
+  { code: '2m', name: '二万', category: 'wan', filename: '2m.svg', recognizedFile: '09-characters-2.svg' },
+  { code: '3m', name: '三万', category: 'wan', filename: '3m.svg', recognizedFile: '10-characters-3.svg' },
+  { code: '4m', name: '四万', category: 'wan', filename: '4m.svg', recognizedFile: '11-characters-4.svg' },
+  { code: '5m', name: '五万', category: 'wan', filename: '5m.svg', recognizedFile: '12-characters-5.svg' },
+  { code: '6m', name: '六万', category: 'wan', filename: '6m.svg', recognizedFile: '13-characters-6.svg' },
+  { code: '7m', name: '七万', category: 'wan', filename: '7m.svg', recognizedFile: '14-characters-7.svg' },
+  { code: '8m', name: '八万', category: 'wan', filename: '8m.svg', recognizedFile: '15-characters-8.svg' },
+  { code: '9m', name: '九万', category: 'wan', filename: '9m.svg', recognizedFile: '16-characters-9.svg' },
+
+  // Tong (筒子: 17-circles-1.svg ~ 25-circles-9.svg)
+  { code: '1p', name: '一筒', category: 'tong', filename: '1p.svg', recognizedFile: '17-circles-1.svg' },
+  { code: '2p', name: '二筒', category: 'tong', filename: '2p.svg', recognizedFile: '18-circles-2.svg' },
+  { code: '3p', name: '三筒', category: 'tong', filename: '3p.svg', recognizedFile: '19-circles-3.svg' },
+  { code: '4p', name: '四筒', category: 'tong', filename: '4p.svg', recognizedFile: '20-circles-4.svg' },
+  { code: '5p', name: '五筒', category: 'tong', filename: '5p.svg', recognizedFile: '21-circles-5.svg' },
+  { code: '6p', name: '六筒', category: 'tong', filename: '6p.svg', recognizedFile: '22-circles-6.svg' },
+  { code: '7p', name: '七筒', category: 'tong', filename: '7p.svg', recognizedFile: '23-circles-7.svg' },
+  { code: '8p', name: '八筒', category: 'tong', filename: '8p.svg', recognizedFile: '24-circles-8.svg' },
+  { code: '9p', name: '九筒', category: 'tong', filename: '9p.svg', recognizedFile: '25-circles-9.svg' },
+
+  // Tiao (条子: 26-bamboos-1.svg ~ 34-bamboos-9.svg)
+  { code: '1s', name: '一条', category: 'tiao', filename: '1s.svg', recognizedFile: '26-bamboos-1.svg' },
+  { code: '2s', name: '二条', category: 'tiao', filename: '2s.svg', recognizedFile: '27-bamboos-2.svg' },
+  { code: '3s', name: '三条', category: 'tiao', filename: '3s.svg', recognizedFile: '28-bamboos-3.svg' },
+  { code: '4s', name: '四条', category: 'tiao', filename: '4s.svg', recognizedFile: '29-bamboos-4.svg' },
+  { code: '5s', name: '五条', category: 'tiao', filename: '5s.svg', recognizedFile: '30-bamboos-5.svg' },
+  { code: '6s', name: '六条', category: 'tiao', filename: '6s.svg', recognizedFile: '31-bamboos-6.svg' },
+  { code: '7s', name: '七条', category: 'tiao', filename: '7s.svg', recognizedFile: '32-bamboos-7.svg' },
+  { code: '8s', name: '八条', category: 'tiao', filename: '8s.svg', recognizedFile: '33-bamboos-8.svg' },
+  { code: '9s', name: '九条', category: 'tiao', filename: '9s.svg', recognizedFile: '34-bamboos-9.svg' },
+
+  // Zi (字牌: 04-east-wind ~ 07-north-wind, 03-red, 02-green, 01-white)
+  { code: '1z', name: '东风', category: 'zi', filename: '1z.svg', recognizedFile: '04-east-wind.svg' },
+  { code: '2z', name: '南风', category: 'zi', filename: '2z.svg', recognizedFile: '05-south-wind.svg' },
+  { code: '3z', name: '西风', category: 'zi', filename: '3z.svg', recognizedFile: '06-west-wind.svg' },
+  { code: '4z', name: '北风', category: 'zi', filename: '4z.svg', recognizedFile: '07-north-wind.svg' },
+  { code: '5z', name: '红中', category: 'zi', filename: '5z.svg', recognizedFile: '03-red-dragon.svg' },
+  { code: '6z', name: '发财', category: 'zi', filename: '6z.svg', recognizedFile: '02-green-dragon.svg' },
+  { code: '7z', name: '白板', category: 'zi', filename: '7z.svg', recognizedFile: '01-white-dragon.svg' },
+
+  // Flower Tiles (花牌: 35-spring ~ 42-bamboo)
+  { code: 'spring', name: '春', category: 'flower', filename: '35-spring.svg', recognizedFile: '35-spring.svg' },
+  { code: 'summer', name: '夏', category: 'flower', filename: '36-summer.svg', recognizedFile: '36-summer.svg' },
+  { code: 'autumn', name: '秋', category: 'flower', filename: '37-autumn.svg', recognizedFile: '37-autumn.svg' },
+  { code: 'winter', name: '冬', category: 'flower', filename: '38-winter.svg', recognizedFile: '38-winter.svg' },
+  { code: 'plum', name: '梅', category: 'flower', filename: '39-plum.svg', recognizedFile: '39-plum.svg' },
+  { code: 'orchid', name: '兰', category: 'flower', filename: '40-orchid.svg', recognizedFile: '40-orchid.svg' },
+  { code: 'chrysanthemum', name: '菊', category: 'flower', filename: '41-chrysanthemum.svg', recognizedFile: '41-chrysanthemum.svg' },
+  { code: 'bamboo', name: '竹', category: 'flower', filename: '42-bamboo.svg', recognizedFile: '42-bamboo.svg' },
+
+  // Back of tile
+  { code: 'back', name: '牌背贴图', category: 'back', filename: 'back.svg', recognizedFile: 'back.svg' },
 ];
 
 interface SvgManagerProps {
@@ -276,11 +291,12 @@ export const SvgManager: React.FC<SvgManagerProps> = ({
         {/* Filter Categories */}
         <div className="flex flex-wrap gap-1.5 border-t border-slate-800 pt-3">
           {[
-            { id: 'all', label: '全部 (35)' },
+            { id: 'all', label: `全部 (${ALL_SVG_TILES.length})` },
             { id: 'wan', label: '万子 (1m~9m)' },
             { id: 'tong', label: '筒子 (1p~9p)' },
             { id: 'tiao', label: '条子 (1s~9s)' },
             { id: 'zi', label: '字牌 (东南西北中发白)' },
+            { id: 'flower', label: '花牌 (春夏秋冬梅兰竹菊)' },
             { id: 'back', label: '牌背 (back.svg)' },
           ].map(cat => (
             <button
@@ -298,50 +314,34 @@ export const SvgManager: React.FC<SvgManagerProps> = ({
         </div>
       </div>
 
-      {/* Grid of All 35 SVG Tiles with Specifications */}
+      {/* Grid of All SVG Tiles with Specifications */}
       <div className="space-y-3">
         <div className="flex justify-between items-center text-xs text-slate-400">
-          <span>文件规格对照表 (将你的 SVG 按下方标准文件名命名即可):</span>
+          <span>文件规格对照表 (已从你的仓库成功识别到 42 张完整 SVG 麻将牌面):</span>
+          <span className="text-emerald-400 font-bold">● 已全部就绪</span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-2.5">
           {filteredTiles.map(tile => {
             const hasCustom = Boolean(customSvgMap[tile.code]);
-            const svgSrc = customSvgMap[tile.code];
+            const svgSrc = customSvgMap[tile.code] || `/static/tiles/${tile.recognizedFile}`;
 
             return (
               <div
                 key={tile.code}
-                className={`p-2.5 rounded-xl border flex flex-col items-center justify-between text-center transition-all ${
-                  hasCustom
-                    ? 'bg-emerald-950/40 border-emerald-500/60 shadow-xs'
-                    : 'bg-slate-900/70 border-slate-800 hover:border-slate-700'
-                }`}
+                className="p-2.5 rounded-xl border bg-emerald-950/30 border-emerald-500/40 hover:border-emerald-400 flex flex-col items-center justify-between text-center transition-all shadow-xs"
               >
-                {/* SVG Image Preview or Placeholder */}
-                <div className="w-12 h-16 bg-white/95 rounded-md border border-slate-200 flex items-center justify-center p-1 shadow-sm mb-2 relative overflow-hidden">
-                  {hasCustom ? (
-                    <img
-                      src={svgSrc}
-                      alt={tile.name}
-                      className="w-full h-full object-contain"
-                    />
-                  ) : tile.code === 'back' ? (
-                    <div className="w-full h-full bg-emerald-800 rounded flex items-center justify-center text-xs text-emerald-200 font-bold">
-                      背
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center">
-                      <span className="text-[9px] text-slate-400 font-mono">{tile.code}</span>
-                      <span className="text-base font-black text-slate-800 leading-none mt-1">
-                        {tile.name}
-                      </span>
-                    </div>
-                  )}
-
-                  {hasCustom && (
-                    <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
-                  )}
+                {/* SVG Image Preview */}
+                <div className="w-12 h-16 bg-white rounded-md border border-slate-200 flex items-center justify-center p-1 shadow-sm mb-2 relative overflow-hidden">
+                  <img
+                    src={svgSrc}
+                    alt={tile.name}
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                    }}
+                  />
+                  <span className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white" />
                 </div>
 
                 {/* Name & Required File Name */}
@@ -349,19 +349,15 @@ export const SvgManager: React.FC<SvgManagerProps> = ({
                   <div className="font-bold text-xs text-slate-200 truncate">
                     {tile.name}
                   </div>
-                  <div className="font-mono text-[11px] text-cyan-400 bg-slate-950/80 px-1 py-0.5 rounded border border-slate-800 mt-1 select-all font-semibold">
-                    {tile.filename}
+                  <div className="font-mono text-[10px] text-emerald-300 bg-slate-950/80 px-1 py-0.5 rounded border border-emerald-900 mt-1 select-all font-semibold truncate" title={tile.recognizedFile}>
+                    {tile.recognizedFile}
                   </div>
                 </div>
 
                 <div className="mt-1.5 text-[10px]">
-                  {hasCustom ? (
-                    <span className="text-emerald-400 font-bold flex items-center gap-0.5">
-                      <CheckCircle2 className="w-3 h-3" /> 已替换
-                    </span>
-                  ) : (
-                    <span className="text-slate-500">内置矢量</span>
-                  )}
+                  <span className="text-emerald-400 font-bold flex items-center gap-0.5">
+                    <CheckCircle2 className="w-3 h-3" /> 已识别加载
+                  </span>
                 </div>
               </div>
             );

@@ -24,18 +24,33 @@ import {
   Volume2,
   VolumeX,
   Zap,
+  ArrowLeft,
+  Mic,
+  MicOff,
 } from 'lucide-react';
+import { mahjongAudio } from '../utils/mahjongAudio';
 
 interface VisualBoardProps {
   customSvgMap?: Record<string, string>;
+  onBackToLobby?: () => void;
 }
 
-export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) => {
+export const VisualBoard: React.FC<VisualBoardProps> = ({
+  customSvgMap = {},
+  onBackToLobby,
+}) => {
   const [game, setGame] = useState<GameState>(() => createInitialGame());
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(mahjongAudio.soundEnabled);
+  const [voiceEnabled, setVoiceEnabled] = useState(mahjongAudio.voiceEnabled);
+  const [speechBubble, setSpeechBubble] = useState<{ seat: number; text: string } | null>(null);
   const [botSpeed, setBotSpeed] = useState<number>(700); // ms
   const isProcessingRef = useRef(false);
+
+  const showActionBubble = (seat: number, text: string) => {
+    setSpeechBubble({ seat, text });
+    setTimeout(() => setSpeechBubble(null), 1800);
+  };
 
   const human = game.players[0];
   const isHumanTurn = game.currentTurn === 0 && !game.isGameOver;
@@ -82,9 +97,15 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
     if (!isHumanTurn || isProcessingRef.current) return;
     if (idx < 0 || idx >= human.hand.length) return;
 
-    if (soundEnabled) playDiscardSound();
-
     const tile = human.hand[idx];
+
+    if (soundEnabled) {
+      mahjongAudio.playDiscardClack();
+    }
+    if (voiceEnabled) {
+      mahjongAudio.speakTile(tile.name);
+    }
+
     const newHand = [...human.hand];
     newHand.splice(idx, 1);
     const sorted = sortTiles(newHand);
@@ -127,7 +148,9 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
           const bot = prev.players[p];
           const winCheck = checkWin(bot.hand, bot.melds, discard, false);
           if (winCheck.isWin) {
-            if (soundEnabled) playWinFanfare();
+            showActionBubble(p, '胡啦！');
+            if (voiceEnabled) mahjongAudio.speakAction('hu');
+            else if (soundEnabled) playWinFanfare();
             const updated = [...prev.players];
             updated[p] = { ...bot, score: bot.score + winCheck.score * 3, hasWon: true };
             updated[fromSeat] = {
@@ -204,7 +227,9 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
       if (game.justDrawnTile) {
         const selfWin = checkWin(bot.hand, bot.melds, game.justDrawnTile, true);
         if (selfWin.isWin) {
-          if (soundEnabled) playWinFanfare();
+          showActionBubble(botSeat, '自摸！');
+          if (voiceEnabled) mahjongAudio.speakAction('zimo');
+          else if (soundEnabled) playWinFanfare();
           const updated = [...game.players];
           updated[botSeat] = {
             ...bot,
@@ -245,7 +270,8 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
         discards: [...bot.discards, discardedTile],
       };
 
-      if (soundEnabled) playDiscardSound();
+      if (soundEnabled) mahjongAudio.playDiscardClack();
+      if (voiceEnabled) mahjongAudio.speakTile(discardedTile.name);
 
       setGame(prev => ({
         ...prev,
@@ -276,11 +302,16 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
 
   // Human Action Handlers
   const handleHumanHu = () => {
-    if (soundEnabled) playWinFanfare();
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+    const isSelf = canSelfWin;
+    showActionBubble(0, isSelf ? '自摸大胡！' : '胡了！');
+    if (voiceEnabled) {
+      mahjongAudio.speakAction(isSelf ? 'zimo' : 'hu');
+    } else if (soundEnabled) {
+      mahjongAudio.playHuFanfare();
+    }
 
     const winTile = canSelfWin ? game.justDrawnTile! : game.lastDiscard!;
-    const isSelf = canSelfWin;
     const res = checkWin(human.hand, human.melds, winTile, isSelf);
 
     const updated = [...game.players];
@@ -313,7 +344,12 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
 
   const handleHumanPeng = () => {
     if (!opponentDiscard) return;
-    if (soundEnabled) playMeldSound();
+    showActionBubble(0, '碰！');
+    if (voiceEnabled) {
+      mahjongAudio.speakAction('peng');
+    } else if (soundEnabled) {
+      mahjongAudio.playActionAlert();
+    }
 
     let count = 0;
     const meldCards: Tile[] = [];
@@ -377,8 +413,18 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
   return (
     <div className="flex flex-col h-full bg-slate-950 text-slate-100 rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
       {/* Top Status & Controls Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm">
-        <div className="flex items-center gap-3">
+      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 sm:px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {onBackToLobby && (
+            <button
+              onClick={onBackToLobby}
+              className="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-2.5 py-1 rounded-lg border border-slate-700 text-xs font-bold transition-all cursor-pointer mr-1"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>大厅</span>
+            </button>
+          )}
+
           <span className="flex items-center gap-1.5 font-bold text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-md border border-emerald-800/60">
             <Sparkles className="w-4 h-4" />
             {game.roundName}
@@ -386,40 +432,66 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
           <span className="text-slate-400 hidden sm:inline">
             规则:{' '}
             <span className="text-amber-300 font-semibold">
-              {game.ruleType === 'GB' ? '国标十三张 (带字牌)' : '四川血战 (108张)'}
+              {game.ruleType === 'GB' ? '国标十三张' : '四川血战'}
             </span>
           </span>
           <span className="bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-mono">
-            牌墙余: <strong className="text-emerald-400">{game.wallRemaining}</strong> 张
+            余: <strong className="text-emerald-400">{game.wallRemaining}</strong> 张
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Voice Announcer Toggle */}
           <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
-            className="p-1.5 rounded hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
-            title={soundEnabled ? '音效开启' : '音效静音'}
+            onClick={() => {
+              const next = !voiceEnabled;
+              mahjongAudio.voiceEnabled = next;
+              setVoiceEnabled(next);
+            }}
+            className={`p-1.5 rounded-lg border transition-colors ${
+              voiceEnabled
+                ? 'bg-emerald-950/80 border-emerald-500/50 text-emerald-300'
+                : 'bg-slate-800 border-slate-700 text-slate-500'
+            }`}
+            title={voiceEnabled ? '真人报牌语音开启' : '报牌语音静音'}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-emerald-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
+            {voiceEnabled ? <Mic className="w-4 h-4 text-emerald-400" /> : <MicOff className="w-4 h-4 text-slate-500" />}
+          </button>
+
+          {/* Sound Effects Toggle */}
+          <button
+            onClick={() => {
+              const next = !soundEnabled;
+              mahjongAudio.soundEnabled = next;
+              setSoundEnabled(next);
+            }}
+            className={`p-1.5 rounded-lg border transition-colors ${
+              soundEnabled
+                ? 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300'
+                : 'bg-slate-800 border-slate-700 text-slate-500'
+            }`}
+            title={soundEnabled ? '碰撞音效开启' : '音效静音'}
+          >
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-cyan-400" /> : <VolumeX className="w-4 h-4 text-slate-500" />}
           </button>
 
           <select
             value={botSpeed}
             onChange={e => setBotSpeed(Number(e.target.value))}
-            className="bg-slate-800 text-slate-300 text-xs rounded px-2 py-1 border border-slate-700 outline-none"
+            className="bg-slate-800 text-slate-300 text-xs rounded-lg px-2 py-1 border border-slate-700 outline-none"
             title="出牌速度"
           >
-            <option value={1000}>🐢 慢速 (1.0s)</option>
-            <option value={600}>⚡ 正常 (0.6s)</option>
-            <option value={250}>🚀 极速 (0.25s)</option>
+            <option value={1000}>🐢 慢速</option>
+            <option value={600}>⚡ 正常</option>
+            <option value={250}>🚀 极速</option>
           </select>
 
           <button
             onClick={() => handleReset(game.ruleType)}
-            className="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded text-xs transition-colors border border-slate-700 font-medium"
+            className="flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-xs transition-colors border border-slate-700 font-medium"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            重开
+            重置
           </button>
         </div>
       </div>
@@ -427,7 +499,12 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
       {/* Main Mahjong Table Felt */}
       <div className="flex-1 relative bg-gradient-to-b from-emerald-950 via-slate-900 to-emerald-950 p-3 sm:p-4 flex flex-col justify-between overflow-hidden">
         {/* Opponent: North (Seat 2 - 小美) */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center relative">
+          {speechBubble?.seat === 2 && (
+            <div className="absolute -top-7 bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full shadow-lg shadow-red-500/50 animate-bounce z-20">
+              💬 {speechBubble.text}
+            </div>
+          )}
           <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-1 rounded-full border border-slate-800 text-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="font-bold text-sky-400">【北】{game.players[2].name}</span>
@@ -459,7 +536,12 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
         {/* Middle Area: West (Seat 3), Center River (牌河), East (Seat 1) */}
         <div className="flex items-center justify-between my-2 sm:my-3">
           {/* West Player (Seat 3 - 老李) */}
-          <div className="flex flex-col items-center w-24 sm:w-28 flex-shrink-0">
+          <div className="flex flex-col items-center w-24 sm:w-28 flex-shrink-0 relative">
+            {speechBubble?.seat === 3 && (
+              <div className="absolute -top-7 bg-purple-600 text-white font-black text-xs px-2.5 py-0.5 rounded-full shadow-lg animate-bounce z-20">
+                💬 {speechBubble.text}
+              </div>
+            )}
             <div className="bg-slate-900/80 px-2 py-1 rounded-md border border-slate-800 text-[11px] text-center mb-1">
               <div className="font-bold text-purple-400">【西】老李</div>
               <div className="text-amber-400 font-mono text-[10px]">{game.players[3].score}分</div>
@@ -525,7 +607,12 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
           </div>
 
           {/* East Player (Seat 1 - 阿强) */}
-          <div className="flex flex-col items-center w-24 sm:w-28 flex-shrink-0">
+          <div className="flex flex-col items-center w-24 sm:w-28 flex-shrink-0 relative">
+            {speechBubble?.seat === 1 && (
+              <div className="absolute -top-7 bg-blue-600 text-white font-black text-xs px-2.5 py-0.5 rounded-full shadow-lg animate-bounce z-20">
+                💬 {speechBubble.text}
+              </div>
+            )}
             <div className="bg-slate-900/80 px-2 py-1 rounded-md border border-slate-800 text-[11px] text-center mb-1">
               <div className="font-bold text-blue-400">【东】阿强</div>
               <div className="text-amber-400 font-mono text-[10px]">{game.players[1].score}分</div>
@@ -540,7 +627,12 @@ export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) =
         </div>
 
         {/* Bottom Area: Human Player (Seat 0 - 你) */}
-        <div className="bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl p-3 shadow-xl">
+        <div className="bg-slate-900/90 backdrop-blur border border-slate-800 rounded-xl p-3 shadow-xl relative">
+          {speechBubble?.seat === 0 && (
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-500 text-slate-950 font-black text-xs px-4 py-1 rounded-full shadow-xl animate-bounce z-30">
+              ⚡ {speechBubble.text}
+            </div>
+          )}
           {/* Header & Interactive Action Buttons */}
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-slate-800">
             <div className="flex items-center gap-2">
