@@ -1,0 +1,6 @@
+{
+  "name": "Go Mahjong Termux - 国标/川麻终端与网页双模麻将",
+  "description": "专为 Termux (Android) 与 GitHub 部署打造的 Go 语言开源麻将游戏。支持终端 TUI 字符界面与局域网 Web 界面、智能 AI 对战、吃碰杠胡、一键导出源码与 Termux 极速部署指南。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
