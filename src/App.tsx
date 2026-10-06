@@ -11,6 +11,7 @@ import { SvgManager } from './components/SvgManager';
 import { CloudflareTunnelGuide } from './components/CloudflareTunnelGuide';
 import { CodeExplorer } from './components/CodeExplorer';
 import { TermuxGuide } from './components/TermuxGuide';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('lobby');
@@ -56,6 +57,9 @@ export default function App() {
         {activeTab === 'code' && <CodeExplorer />}
         {activeTab === 'guide' && <TermuxGuide />}
       </main>
+
+      {/* Global Offline Mode Indicator */}
+      <OfflineIndicator />
     </div>
   );
 }

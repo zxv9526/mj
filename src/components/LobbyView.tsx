@@ -22,6 +22,7 @@ import {
   Share2,
 } from 'lucide-react';
 import { mahjongAudio } from '../utils/mahjongAudio';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface LobbyViewProps {
   onStartGame: (rule: 'GB' | 'SICHUAN', roomName: string) => void;
@@ -146,6 +147,9 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
           查看牌面文件对照表 →
         </button>
       </div>
+
+      {/* PWA In-App Install Card */}
+      <PWAInstallButton variant="full" />
 
       {/* Main Room Selection Cards */}
       <div className="space-y-3">

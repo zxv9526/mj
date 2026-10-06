@@ -8,6 +8,7 @@ import {
   Palette,
   Sparkles,
 } from 'lucide-react';
+import { PWAInstallButton } from './PWAInstallButton';
 
 export type ActiveTab = 'lobby' | 'visual' | 'svg' | 'tunnel' | 'code' | 'guide';
 
@@ -87,51 +88,56 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <nav className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
-        {tabs.map(tab => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer relative ${
-                isActive
-                  ? 'bg-gradient-to-r from-amber-600 to-emerald-600 text-white shadow-md shadow-amber-600/30 font-bold'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span className="hidden md:inline">{tab.label}</span>
-              <span className="md:hidden">
-                {tab.id === 'lobby'
-                  ? '大厅'
-                  : tab.id === 'visual'
-                  ? '牌桌'
-                  : tab.id === 'svg'
-                  ? 'SVG'
-                  : tab.id === 'tunnel'
-                  ? '隧道'
-                  : tab.id === 'code'
-                  ? '源码'
-                  : '指南'}
-              </span>
-              {tab.badge && (
-                <span
-                  className={`hidden lg:inline text-[9px] px-1 py-0.2 rounded-full font-mono ${
-                    isActive
-                      ? 'bg-amber-950 text-amber-200 border border-amber-700/60'
-                      : 'bg-slate-800 text-slate-400'
-                  }`}
-                >
-                  {tab.badge}
+      {/* Navigation Tabs & PWA Install */}
+      <div className="flex items-center gap-2">
+        <nav className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+          {tabs.map(tab => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer relative ${
+                  isActive
+                    ? 'bg-gradient-to-r from-amber-600 to-emerald-600 text-white shadow-md shadow-amber-600/30 font-bold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hidden md:inline">{tab.label}</span>
+                <span className="md:hidden">
+                  {tab.id === 'lobby'
+                    ? '大厅'
+                    : tab.id === 'visual'
+                    ? '牌桌'
+                    : tab.id === 'svg'
+                    ? 'SVG'
+                    : tab.id === 'tunnel'
+                    ? '隧道'
+                    : tab.id === 'code'
+                    ? '源码'
+                    : '指南'}
                 </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+                {tab.badge && (
+                  <span
+                    className={`hidden lg:inline text-[9px] px-1 py-0.2 rounded-full font-mono ${
+                      isActive
+                        ? 'bg-amber-950 text-amber-200 border border-amber-700/60'
+                        : 'bg-slate-800 text-slate-400'
+                    }`}
+                  >
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* PWA In-App Install Button */}
+        <PWAInstallButton variant="compact" />
+      </div>
     </header>
   );
 };
