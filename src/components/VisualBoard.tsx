@@ -26,7 +26,11 @@ import {
   Zap,
 } from 'lucide-react';
 
-export const VisualBoard: React.FC = () => {
+interface VisualBoardProps {
+  customSvgMap?: Record<string, string>;
+}
+
+export const VisualBoard: React.FC<VisualBoardProps> = ({ customSvgMap = {} }) => {
   const [game, setGame] = useState<GameState>(() => createInitialGame());
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -434,7 +438,7 @@ export const VisualBoard: React.FC = () => {
           <div className="flex items-center gap-2 mt-1">
             <div className="flex gap-0.5">
               {game.players[2].hand.map((_, i) => (
-                <TileView key={i} isBack size="sm" />
+                <TileView key={i} isBack size="sm" customSvgUrl={customSvgMap['back']} />
               ))}
             </div>
             {/* North Melds */}
@@ -443,7 +447,7 @@ export const VisualBoard: React.FC = () => {
                 {game.players[2].melds.map((m, mi) => (
                   <div key={mi} className="flex gap-0.5 bg-slate-800/80 p-0.5 rounded">
                     {m.tiles.map((t, ti) => (
-                      <TileView key={ti} tile={t} size="sm" />
+                      <TileView key={ti} tile={t} size="sm" customSvgUrl={customSvgMap[t.code]} />
                     ))}
                   </div>
                 ))}
@@ -463,7 +467,7 @@ export const VisualBoard: React.FC = () => {
             </div>
             <div className="flex flex-wrap gap-0.5 justify-center w-16">
               {game.players[3].hand.slice(0, 8).map((_, i) => (
-                <TileView key={i} isBack size="sm" />
+                <TileView key={i} isBack size="sm" customSvgUrl={customSvgMap['back']} />
               ))}
             </div>
           </div>
@@ -496,7 +500,12 @@ export const VisualBoard: React.FC = () => {
                       game.lastDiscard?.id === d.id && game.lastDiscardSeat === pIdx;
                     return (
                       <div key={`${pIdx}-${dIdx}`} className="relative">
-                        <TileView tile={d} size="sm" isHighlight={isLast} />
+                        <TileView
+                          tile={d}
+                          size="sm"
+                          isHighlight={isLast}
+                          customSvgUrl={customSvgMap[d.code]}
+                        />
                         {isLast && (
                           <span className="absolute -top-1.5 -right-1 bg-amber-400 text-slate-950 text-[8px] font-black px-1 rounded-full animate-bounce">
                             新
@@ -524,7 +533,7 @@ export const VisualBoard: React.FC = () => {
             </div>
             <div className="flex flex-wrap gap-0.5 justify-center w-16">
               {game.players[1].hand.slice(0, 8).map((_, i) => (
-                <TileView key={i} isBack size="sm" />
+                <TileView key={i} isBack size="sm" customSvgUrl={customSvgMap['back']} />
               ))}
             </div>
           </div>
@@ -608,7 +617,12 @@ export const VisualBoard: React.FC = () => {
                     {m.type === 'PENG' ? '碰' : m.type === 'GANG' ? '杠' : '吃'}
                   </span>
                   {m.tiles.map((t, ti) => (
-                    <TileView key={ti} tile={t} size="sm" />
+                    <TileView
+                      key={ti}
+                      tile={t}
+                      size="sm"
+                      customSvgUrl={customSvgMap[t.code]}
+                    />
                   ))}
                 </div>
               ))}
@@ -638,6 +652,7 @@ export const VisualBoard: React.FC = () => {
                     size="lg"
                     indexLabel={idx + 1}
                     isSelected={selectedIdx === idx}
+                    customSvgUrl={customSvgMap[tile.code]}
                     onClick={() => {
                       if (!isHumanTurn) return;
                       if (selectedIdx === idx) {

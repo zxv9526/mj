@@ -1,37 +1,47 @@
 import React from 'react';
 import {
   Gamepad2,
-  Terminal,
   FolderCode,
   BookOpen,
-  Sparkles,
-  Github,
+  Globe,
+  Palette,
 } from 'lucide-react';
 
-export type ActiveTab = 'visual' | 'terminal' | 'code' | 'guide';
+export type ActiveTab = 'visual' | 'svg' | 'tunnel' | 'code' | 'guide';
 
 interface NavbarProps {
   activeTab: ActiveTab;
   onTabChange: (tab: ActiveTab) => void;
+  uploadedSvgCount: number;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  activeTab,
+  onTabChange,
+  uploadedSvgCount,
+}) => {
   const tabs = [
     {
       id: 'visual' as ActiveTab,
-      label: '可视化网页麻将',
+      label: '网页实战对局',
       icon: Gamepad2,
-      badge: '实战对局',
+      badge: null,
     },
     {
-      id: 'terminal' as ActiveTab,
-      label: 'Termux 终端模拟器',
-      icon: Terminal,
-      badge: 'TUI',
+      id: 'svg' as ActiveTab,
+      label: 'SVG 牌面管理与放置',
+      icon: Palette,
+      badge: uploadedSvgCount > 0 ? `${uploadedSvgCount}张` : '路径指南',
+    },
+    {
+      id: 'tunnel' as ActiveTab,
+      label: 'Cloudflare 隧道公网',
+      icon: Globe,
+      badge: '免局域网',
     },
     {
       id: 'code' as ActiveTab,
-      label: 'Go 源码树与一键导出',
+      label: 'Go 源码树与导出',
       icon: FolderCode,
       badge: 'ZIP下载',
     },
@@ -39,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
       id: 'guide' as ActiveTab,
       label: 'Termux 部署指南',
       icon: BookOpen,
-      badge: '全教程',
+      badge: null,
     },
   ];
 
@@ -47,28 +57,28 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
     <header className="bg-slate-900 border-b border-slate-800 px-3 sm:px-6 py-2.5 flex items-center justify-between flex-shrink-0 select-none">
       {/* Brand */}
       <div className="flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-600 to-cyan-500 flex items-center justify-center shadow-md shadow-emerald-500/20 text-white font-black text-base">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-600 to-emerald-500 flex items-center justify-center shadow-md shadow-cyan-500/20 text-white font-black text-base">
           🀄
         </div>
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-sm sm:text-base font-black text-slate-100 tracking-tight flex items-center gap-1.5">
-              Go Mahjong
-              <span className="text-emerald-400 font-mono text-xs font-normal">
-                @Termux
+              Go Mahjong Web
+              <span className="text-cyan-400 font-mono text-xs font-normal">
+                + Cloudflare Tunnel
               </span>
             </h1>
-            <span className="bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-              v1.0.0
+            <span className="bg-cyan-950 text-cyan-400 border border-cyan-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+              网络版
             </span>
           </div>
           <p className="text-[11px] text-slate-400 hidden sm:block">
-            纯 Go 打造 · 终端 TUI 与 网页 双模式麻将
+            纯 Go 打造 · SVG 矢量牌面 · Cloudflare 免局域网全球公网对战
           </p>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* Navigation Tabs */}
       <nav className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
         {tabs.map(tab => {
           const Icon = tab.icon;
@@ -77,23 +87,36 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer relative ${
                 isActive
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30 font-bold'
+                  ? 'bg-cyan-600 text-white shadow-md shadow-cyan-600/30 font-bold'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span className="hidden md:inline">{tab.label}</span>
               <span className="md:hidden">
                 {tab.id === 'visual'
-                  ? '网页'
-                  : tab.id === 'terminal'
-                  ? '终端'
+                  ? '对局'
+                  : tab.id === 'svg'
+                  ? 'SVG'
+                  : tab.id === 'tunnel'
+                  ? '隧道'
                   : tab.id === 'code'
                   ? '源码'
                   : '指南'}
               </span>
+              {tab.badge && (
+                <span
+                  className={`hidden lg:inline text-[9px] px-1 py-0.2 rounded-full font-mono ${
+                    isActive
+                      ? 'bg-cyan-900 text-cyan-200'
+                      : 'bg-slate-800 text-slate-400'
+                  }`}
+                >
+                  {tab.badge}
+                </span>
+              )}
             </button>
           );
         })}
