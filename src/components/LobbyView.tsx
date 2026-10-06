@@ -20,6 +20,8 @@ import {
   Layers,
   CheckCircle2,
   Share2,
+  Bot,
+  Megaphone,
 } from 'lucide-react';
 import { mahjongAudio } from '../utils/mahjongAudio';
 import { PWAInstallButton } from './PWAInstallButton';
@@ -128,6 +130,45 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
             <span>牌桌音效: {soundOn ? '开启' : '关闭'}</span>
           </button>
         </div>
+      </div>
+
+      {/* Real-time Admin Broadcast Ticker */}
+      <div className="bg-gradient-to-r from-amber-950 via-slate-900 to-amber-950 border border-amber-500/40 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs shadow-md">
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <span className="p-1 rounded-md bg-amber-500/20 text-amber-300 flex-shrink-0 animate-pulse">
+            <Megaphone className="w-4 h-4" />
+          </span>
+          <div className="flex items-center gap-2 truncate">
+            <span className="font-bold text-amber-300 flex-shrink-0">【管理员跑马灯公告】</span>
+            <span className="text-amber-100/90 truncate font-medium">
+              欢迎光临雀神天下！Termux Go 后端已集成 Telegram 机器人远程管理与 Cloudflare 隧道！
+            </span>
+          </div>
+        </div>
+        <span className="text-[10px] text-amber-400/80 font-mono flex-shrink-0 hidden sm:inline ml-2">
+          TG 实时推送生效中
+        </span>
+      </div>
+
+      {/* Telegram Bot Admin Status Card */}
+      <div className="bg-slate-900/90 border border-cyan-800/40 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs shadow">
+        <div className="flex items-center gap-2.5">
+          <span className="p-1 rounded-md bg-cyan-500/20 text-cyan-400">
+            <Bot className="w-4 h-4" />
+          </span>
+          <div className="text-slate-300">
+            <strong className="text-cyan-300 font-bold">Telegram 机器人管理员已适配</strong>
+            <span className="text-slate-400 ml-1.5 hidden md:inline">
+              在 Termux 根目录（mj 目录上一级）创建 <code className="text-amber-300 font-mono">~/.env</code> 即可启用手机 TG 远程控制！
+            </span>
+          </div>
+        </div>
+        <button
+          onClick={() => onNavigateTab('guide')}
+          className="text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1 cursor-pointer"
+        >
+          查看 ~/.env 配置教程 →
+        </button>
       </div>
 
       {/* SVG Recognition Status Banner */}
